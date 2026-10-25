@@ -1,5 +1,5 @@
-const { PrismaClient, Prisma } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { Prisma } = require('@prisma/client');
+const { insertAlokasiTKD, findAlokasiByTahun } = require('./alokasi.repository');
 
 const createAlokasiTKD = async (data) => {
   const {
@@ -24,26 +24,21 @@ const createAlokasiTKD = async (data) => {
     .add(new Prisma.Decimal(infis));
 
 
-  return await prisma.alokasiTKD.create({
-    data: {
-      tahun: parseInt(tahun),
-      daerah,
-      dbh: new Prisma.Decimal(dbh),
-      dau: new Prisma.Decimal(dau),
-      dakFisik: new Prisma.Decimal(dakFisik),
-      dakNonfisik: new Prisma.Decimal(dakNonfisik),
-      danaDesa: new Prisma.Decimal(danaDesa),
-      infis: new Prisma.Decimal(infis),
-      total: total
-    }
+  return await insertAlokasiTKD({
+    tahun: parseInt(tahun),
+    daerah,
+    dbh: new Prisma.Decimal(dbh),
+    dau: new Prisma.Decimal(dau),
+    dakFisik: new Prisma.Decimal(dakFisik),
+    dakNonfisik: new Prisma.Decimal(dakNonfisik),
+    danaDesa: new Prisma.Decimal(danaDesa),
+    infis: new Prisma.Decimal(infis),
+    total: total
   });
 };
 
 const getAlokasiChart = async (tahun) => {
-  return await prisma.alokasiTKD.findMany({
-    where: { tahun },
-    orderBy: { daerah: 'asc' }
-  });
+  return await findAlokasiByTahun(tahun);
 };
 
 module.exports = {
