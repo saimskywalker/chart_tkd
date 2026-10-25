@@ -3,24 +3,6 @@ const router = express.Router()
 const tkdService = require('./tkd.service')
 const isAdmin = require('../middleware/adminAuthorize')
 
-// Helper untuk ubah BigInt ke Number/String agar frontend tidak error
-function serializeBigInts (data) {
-  return data.map(item => ({
-    ...item,
-    semula: item.semula !== undefined ? Number(item.semula) : undefined,
-    menjadi: item.menjadi !== undefined ? Number(item.menjadi) : undefined,
-    pencadangan:
-      item.pencadangan !== undefined ? Number(item.pencadangan) : undefined,
-    pagu: item.pagu !== undefined ? Number(item.pagu) : undefined,
-    realisasi:
-      item.realisasi !== undefined ? Number(item.realisasi) : undefined,
-    efisiensi:
-      item.efisiensi !== undefined ? Number(item.efisiensi) : undefined,
-    persentase:
-      item.persentase !== undefined ? Number(item.persentase) : undefined
-  }))
-}
-
 // ➕ Tambah data TKD
 router.post('/create', isAdmin, async (req, res) => {
   try {
@@ -80,8 +62,7 @@ router.get('/efisiensi', async (req, res) => {
     }
 
     const result = await tkdService.getEfisiensiTKD(tahun, daerah)
-    console.log("Efisiensi result:", result);
-    res.status(200).json(serializeBigInts(result))
+    res.status(200).json(result)
   } catch (error) {
     console.error('Gagal ambil data efisiensi:', error)
     res.status(500).json({ error: 'Gagal Mengambil Data Efisiensi' })
@@ -135,7 +116,7 @@ router.get('/realisasi', async (req, res) => {
     }
 
     const result = await tkdService.getRealisasiTKD(tahun, daerah)
-    res.status(200).json(serializeBigInts(result))
+    res.status(200).json(result)
   } catch (error) {
     console.error('Gagal ambil data realisasi:', error)
     res.status(500).json({ error: 'Gagal Mengambil Data Realisasi' })
