@@ -18,7 +18,6 @@ async function register (email, kode){
 }
 
 async function login(email, kode) {
-    console.log('Attempting to log in:', { email, kode });
     const admin = await adminRepository.findAdminByEmail(email);
 
     if (!admin || admin.kode !== kode) {

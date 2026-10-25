@@ -1,30 +1,19 @@
 const express = require('express')
+const cors = require('cors')
+
 const app = express()
-app.use(express.json());
+app.use(express.json())
+app.use(cors())
 
-const cors = require("cors");
-app.use(cors());
-
-
-app.get("/", (req, res) => {
-res.send('Hello there!')
+app.get('/', (req, res) => {
+  res.send('Hello there!')
 })
 
-const PORT = process.env.PORT || 3000;
+app.use('/tkd', require('./tkd/tkd.controller'))
+app.use('/alokasi', require('./AlokasiTKD/alokasi.controller'))
+app.use('/admin', require('./adminlogin/admin.controller'))
+
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
-  console.log(`App listening on port ` + PORT);
-});
-
-
-// Import routes after basic middleware
-const tkdRouter = require("./tkd/tkd.controller");
-console.log("Loaded tkdRouter");
-app.use("/tkd", tkdRouter);
-
-const alokasiController = require('./AlokasiTKD/alokasi.controller');
-console.log("Loaded alokasiController");
-app.use('/alokasi', alokasiController);
-
-const adminController = require('./adminlogin/admin.controller');
-console.log("Loaded adminController");
-app.use('/admin', adminController);
+  console.log(`App listening on port ` + PORT)
+})
